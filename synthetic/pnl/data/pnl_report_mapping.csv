@@ -1,0 +1,26 @@
+pnl_category,pnl_report_line,line_order,is_subtotal
+Revenue,Revenue,10,FALSE
+COGS,Cost of Goods Sold,20,FALSE
+Revenue,Gross Margin,30,TRUE
+COGS,Gross Margin,30,TRUE
+Operating Expenses,Operating Expenses,40,FALSE
+Revenue,EBITDA,50,TRUE
+COGS,EBITDA,50,TRUE
+Operating Expenses,EBITDA,50,TRUE
+Depreciation & Amortization,Depreciation & Amortization,60,FALSE
+Revenue,EBIT,70,TRUE
+COGS,EBIT,70,TRUE
+Operating Expenses,EBIT,70,TRUE
+Depreciation & Amortization,EBIT,70,TRUE
+Interest & Taxes,Interest,80,FALSE
+Revenue,EBT,90,TRUE
+COGS,EBT,90,TRUE
+Operating Expenses,EBT,90,TRUE
+Depreciation & Amortization,EBT,90,TRUE
+Interest & Taxes,EBT,90,TRUE
+Interest & Taxes,Taxes,100,FALSE
+Revenue,Net Income,110,TRUE
+COGS,Net Income,110,TRUE
+Operating Expenses,Net Income,110,TRUE
+Depreciation & Amortization,Net Income,110,TRUE
+Interest & Taxes,Net Income,110,TRUE

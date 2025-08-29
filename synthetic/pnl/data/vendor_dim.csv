@@ -1,0 +1,13 @@
+vendor_id,vendor_name,vendor_category,is_preferred
+1,Acme Corp,Materials,Yes
+2,TechSupplies Inc,Equipment,Yes
+3,Global Logistics,Shipping,No
+4,Office World,Office Supplies,Yes
+5,Enterprise Software,Technology,Yes
+6,Energy Solutions,Utilities,No
+7,Marketing Agency,Marketing Services,Yes
+8,Consulting Partners,Professional Services,Yes
+9,Training Solutions,Education,No
+10,Manufacturing Equipment,Machinery,Yes
+11,Facility Services,Maintenance,No
+12,HR Services,Staffing,Yes

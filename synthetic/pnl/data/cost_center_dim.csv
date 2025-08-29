@@ -1,0 +1,13 @@
+cost_center_id,cost_center_name,cost_center_type,department
+1,Corporate Overhead,Administrative,Administration
+2,Finance,Administrative,Finance & Accounting
+3,Human Resources,Administrative,Human Resources
+4,IT Operations,Technical,Information Technology
+5,R&D Center,Research,Research & Development
+6,Manufacturing Plant A,Production,Manufacturing
+7,Manufacturing Plant B,Production,Manufacturing
+8,Sales & Marketing,Commercial,Sales
+9,Marketing Department,Commercial,Marketing
+10,Customer Support,Customer Service,Support
+11,Distribution Center,Logistics,Supply Chain
+12,Legal Department,Administrative,Legal & Compliance

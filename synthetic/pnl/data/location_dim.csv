@@ -1,0 +1,13 @@
+location_id,country,region,subregion
+1,USA,North America,Northeast
+2,USA,North America,Southeast
+3,USA,North America,Midwest
+4,USA,North America,West
+5,Canada,North America,East
+6,Canada,North America,West
+7,UK,Europe,England
+8,UK,Europe,Scotland
+9,Germany,Europe,North
+10,Germany,Europe,South
+11,France,Europe,North
+12,France,Europe,South

@@ -1,0 +1,49 @@
+pnl_account_name,pnl_category,account_number
+Gross Revenue,Revenue,1001
+Gross Revenue,Revenue,1002
+Gross Revenue,Revenue,1003
+Sales Returns,Revenue,1101
+Sales Returns,Revenue,1102
+Net Revenue,Revenue,1201
+Net Revenue,Revenue,1202
+Net Revenue,Revenue,1203
+Direct Materials,COGS,2001
+Direct Materials,COGS,2002
+Direct Materials,COGS,2003
+Direct Labor,COGS,2101
+Direct Labor,COGS,2102
+Direct Labor,COGS,2103
+Direct Labor,COGS,2104
+Manufacturing Overhead,COGS,2201
+Manufacturing Overhead,COGS,2202
+Marketing,Operating Expenses,3001
+Marketing,Operating Expenses,3002
+Marketing,Operating Expenses,3003
+Salaries,Operating Expenses,3101
+Salaries,Operating Expenses,3102
+Salaries,Operating Expenses,3103
+Sales Commissions,Operating Expenses,3201
+Sales Commissions,Operating Expenses,3202
+Travel & Entertainment,Operating Expenses,3301
+Travel & Entertainment,Operating Expenses,3302
+Travel & Entertainment,Operating Expenses,3303
+Rent,Operating Expenses,3401
+Rent,Operating Expenses,3402
+Utilities,Operating Expenses,3501
+Utilities,Operating Expenses,3502
+Office Supplies,Operating Expenses,3601
+Office Supplies,Operating Expenses,3602
+Office Supplies,Operating Expenses,3603
+R&D,Operating Expenses,3701
+R&D,Operating Expenses,3702
+Depreciation,Depreciation & Amortization,4001
+Depreciation,Depreciation & Amortization,4002
+Depreciation,Depreciation & Amortization,4003
+Amortization,Depreciation & Amortization,4101
+Amortization,Depreciation & Amortization,4102
+Interest,Interest & Taxes,5001
+Interest,Interest & Taxes,5002
+Interest,Interest & Taxes,5003
+Taxes,Interest & Taxes,5101
+Taxes,Interest & Taxes,5102
+Taxes,Interest & Taxes,5103
