@@ -1,0 +1,95 @@
+# Cube Alchemy PnL Model Definitions
+# Based on example_pnl.ipynb notebook
+
+# Base metrics - Raw measure aggregations
+metrics:
+  Amount Actual:
+    description: Sum of the amount from actuals table
+    expression: "[amount (actuals)]"
+    aggregation: sum
+
+  Amount Budget:
+    description: Sum of the amount from budget table
+    expression: "[amount (budget)]"
+    aggregation: sum
+  
+  _line_order_avg:
+    description: Average line order (support metric)
+    expression: "[line_order]"
+    aggregation: mean
+
+# Computed metrics - Calculations based on other metrics
+computed_metrics:
+  difference:
+    description: Variance between actual and budget amounts
+    expression: "[Amount Actual] - [Amount Budget]"
+    depends_on: [Amount_Actual, Amount_Budget]
+  
+  percentage_difference:
+    description: Percentage variance between actual and budget
+    expression: "[difference] / [Amount Budget]"
+    depends_on: [difference, Amount_Budget]
+
+# Queries - Combinations of metrics and dimensions
+queries:
+  PNL:
+    description: P&L statement showing actuals vs budget with variance analysis
+    metrics: 
+      - Amount Actual
+      - Amount Budget
+    computed_metrics:
+      - difference
+      - percentage_difference
+    dimensions:
+      - pnl_report_line
+    sort:
+      - column: _line_order_avg
+        direction: asc
+  
+  test:
+    description: Test query for line order validation
+    dimensions:
+      - line_order
+      - pnl_report_line
+    metrics:
+      - _line_order_avg
+
+# Plot configurations
+plots:
+  Default2:
+    query: PNL
+    plot_type: bar
+    dimensions:
+      - pnl_report_line
+    metrics:
+      - Amount Actual
+    title: Actual by P&L Report Line
+    sort_values: true
+    sort_ascending: false
+    set_as_default: true
+  
+  comparison:
+    query: PNL
+    plot_type: bar
+    dimensions:
+      - pnl_report_line
+    metrics:
+      - Amount Budget
+    title: P&L Budget Amount
+    orientation: horizontal
+    sort_values: true
+    sort_ascending: false
+    set_as_default: false
+  
+  variance:
+    query: PNL
+    plot_type: bar
+    dimensions:
+      - pnl_report_line
+    metrics:
+      - difference
+    title: P&L Variance
+    orientation: horizontal
+    sort_values: true
+    sort_ascending: false
+    set_as_default: false

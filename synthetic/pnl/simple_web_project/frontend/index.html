@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cube Alchemy Frontend</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 2rem; }
+      #img { max-width: 100%; border: 1px solid #ddd; padding: 8px; }
+      pre { background: #f7f7f7; padding: 8px; }
+    </style>
+  </head>
+  <body>
+    <h1>Cube Alchemy Frontend</h1>
+    <button id="new">New Cube</button>
+    <button id="plot">Call cube.plot()</button>
+    <div id="status"></div>
+    <img id="img" />
+    <pre id="out"></pre>
+
+    <script src="proxy.js"></script>
+    <script>
+      const statusEl = document.getElementById('status');
+      const outEl = document.getElementById('out');
+      const imgEl = document.getElementById('img');
+
+      let cube = null;
+
+      document.getElementById('new').onclick = async () => {
+        cube = await CubeProxy.new();
+        statusEl.textContent = `Cube ready: ${cube.id}`;
+      };
+
+      document.getElementById('plot').onclick = async () => {
+        if (!cube) { alert('Create cube first'); return; }
+        const res = await cube.plot('PNL');
+        if (res && res._type === 'image/png;base64') {
+          imgEl.src = `data:image/png;base64,${res.data}`;
+        } else {
+          outEl.textContent = JSON.stringify(res, null, 2);
+        }
+      };
+    </script>
+  </body>
+</html>

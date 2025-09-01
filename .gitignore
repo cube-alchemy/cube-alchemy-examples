@@ -184,3 +184,6 @@ cython_debug/
 *.pyo
 *.pyd
 __pycache__/
+
+test_single_table.ipynb
+*.pkl
