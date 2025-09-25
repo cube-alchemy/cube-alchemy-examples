@@ -1,5 +1,6 @@
 import streamlit as st
 from typing import Dict, Any, List
+from my_component import my_component
 
 
 def render_sidebar_filters(cube):
@@ -23,23 +24,30 @@ def render_sidebar_filters(cube):
             return []
 
     selections: Dict[str, List[str]] = {}
-    with st.sidebar.form('filters_form', clear_on_submit=False):
+    with st.sidebar:
+        
+        col1, col2, col3 = st.columns(3)
+
+        if col1.button('Clear'):
+            cube.reset_filters('all')
+            st.rerun()
+        if col2.button('Undo'):
+            cube.reset_filters('backward')
+            st.rerun()
+        if col3.button('Redo'):
+            cube.reset_filters('fordward')
+            st.rerun()
+        
         for dim in all_dims:
             options = fetch_options(dim)
-            picked = st.multiselect(dim, options=options, key=f'flt_{dim}')
+            picked = my_component(dim, options=options)
             if picked:
                 selections[dim] = picked
-        submitted = st.form_submit_button('Apply filters', use_container_width=True)
+                if selections:
+                    cube.filter(selections)
+                    st.rerun()
 
-    if submitted:
-        cube.reset_filters('all')
-        if selections:
-            cube.filter(selections)
+        st.write(cube.get_filters())
 
-    # Show applied filters (after potential submit)
-    try:
-        st.sidebar.write(cube.get_filters())
-    except Exception:
-        st.sidebar.write({})
 
     return selections, all_dims

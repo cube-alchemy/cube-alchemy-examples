@@ -74,6 +74,7 @@ def main():
 			- **Metrics**:
 			- **Derived Metrics**
 			- **Queries**
+			
 			This page is useful for auditability & transparency of the analytic layer.
 			"""
 		)

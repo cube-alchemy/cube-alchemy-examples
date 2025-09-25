@@ -10,19 +10,31 @@ render_sidebar_filters(cube)
 all_dims = cube.get_dimensions()
 
 st.header("On the fly Plot")
-ad_hoc_dims = st.multiselect('Dimensions', options=all_dims, key='ad_hoc_dims')
-ad_hoc_metrics = st.multiselect('Metrics', options=list(cube.metrics.keys()), key='ad_hoc_metrics')
-ad_hoc_derived_metrics = st.multiselect('Derived Metrics', options=list(cube.derived_metrics.keys()), key='ad_hoc_derived_metrics')
 
-# Track active selections to determine if we need a new query id (only when non-empty selections first appear or change)
-prev_signature = st.session_state.get('ad_hoc_active_signature')
-current_signature = (tuple(ad_hoc_dims), tuple(ad_hoc_metrics), tuple(ad_hoc_derived_metrics))
-selection_changed = current_signature != prev_signature
-if selection_changed and (ad_hoc_dims or ad_hoc_metrics or ad_hoc_derived_metrics):
-    st.session_state['ad_hoc_query_name'] = f"Ad Hoc Query ({uuid.uuid4()})"
-    st.session_state['ad_hoc_active_signature'] = current_signature
+# --- Persistence Strategy ---
+# We separate the widget key (ui_*) from the stored canonical selection (*_store) so if a
+# manual st.rerun() happens elsewhere mid-cycle (e.g., sidebar), we still retain last
+# committed selection.
 
-q_name = st.session_state.get('ad_hoc_query_name')
+def _persisted_multiselect(label: str, options: list[str], store_key: str, widget_key: str):
+    
+    st.session_state.setdefault(store_key, [])
+    # first render: push stored value (so UI shows previous) via default if widget not yet created
+    # Using a distinct widget key prevents Streamlit from overriding default after initial creation.
+    current_ui = st.multiselect(label, options=options, default=st.session_state[store_key], key=widget_key)
+
+    # Normal path: update store
+    st.session_state[store_key] = list(current_ui)
+    return st.session_state[store_key]
+
+ad_hoc_dims = _persisted_multiselect('Dimensions', all_dims, 'ad_hoc_dims_store', 'ad_hoc_dims_widget')
+ad_hoc_metrics = _persisted_multiselect('Metrics', list(cube.metrics.keys()), 'ad_hoc_metrics_store', 'ad_hoc_metrics_widget')
+ad_hoc_derived_metrics = _persisted_multiselect('Derived Metrics', list(cube.derived_metrics.keys()), 'ad_hoc_derived_metrics_store', 'ad_hoc_derived_metrics_widget')
+
+
+
+
+q_name = f"Ad Hoc Query ({uuid.uuid4()})"
 
 null_dims = st.checkbox('Drop Null Dimensions', value=True, key='ad_hoc_null_dims')
 
@@ -76,5 +88,7 @@ if (ad_hoc_dims or ad_hoc_metrics or ad_hoc_derived_metrics) and q_name:
         st.session_state.queries.append(q_name)
 else:
     st.info("Pick any dimension and metric to preview a table.")
+
+
 
 
