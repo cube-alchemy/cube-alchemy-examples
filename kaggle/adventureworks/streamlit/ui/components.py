@@ -1,6 +1,6 @@
 import streamlit as st
 from typing import Dict, Any, List
-from my_component import my_component
+from cube_alchemy_streamlit_components import filter
 
 
 def render_sidebar_filters(cube):
@@ -40,7 +40,7 @@ def render_sidebar_filters(cube):
         
         for dim in all_dims:
             options = fetch_options(dim)
-            picked = my_component(dim, options=options)
+            picked = filter(dim, options=options)
             if picked:
                 selections[dim] = picked
                 if selections:
