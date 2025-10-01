@@ -1,0 +1,356 @@
+metrics:
+  Amount Actual:
+    expression: '[amount (actuals)]'
+    aggregation: sum
+  Net Income Actual:
+    expression: '[amount (actuals)]'
+    aggregation: sum
+    
+  Amount Budget:
+    expression: '[amount (budget)]'
+    aggregation: sum
+
+  Revenue Actual:
+    expression: '[amount (actuals)]'
+    aggregation: sum
+    metric_filters:
+      pnl_category:
+      - Revenue
+  Gross Margin Actual:
+    expression: '[amount (actuals)]'
+    aggregation: sum
+    metric_filters:
+      pnl_category:
+      - Revenue
+      - COGS
+  EBITDA Actual:
+    expression: '[amount (actuals)]'
+    aggregation: sum
+    metric_filters:
+      pnl_category:
+      - Revenue
+      - COGS
+      - Operating Expenses
+
+
+  Revenue Budget:
+    expression: '[amount (budget)]'
+    aggregation: sum
+    metric_filters:
+      pnl_category:
+      - Revenue
+  
+  _helper_account_order:
+    expression: '[account_number]'
+    aggregation: min
+derived_metrics:
+  # Used in queries
+  difference:
+    expression: '[Amount Actual] - [Amount Budget]'
+  percentage_difference:
+    expression: '[difference] / [Amount Actual]'
+  Gross Margin %:
+    expression: '[Gross Margin Actual] / [Revenue Actual]'
+  Net Income Margin %:
+    expression: '[Net Income Actual] / [Revenue Actual]'
+  EBITDA Margin %:
+    expression: '[EBITDA Actual] / [Revenue Actual]'
+queries:
+  # Budget vs Actual Overall (by P&L line and division, and over time)
+  Profit and Loss Budget vs Actual Overview by P&L line:
+    dimensions:
+    - pnl_report_line
+    - line_order
+    metrics:
+    - Amount Actual
+    - Amount Budget
+    derived_metrics:
+    - difference
+    - percentage_difference
+    sort:
+    - column: line_order
+      direction: asc
+    plots:
+      Overview:
+        plot_type: table
+        dimensions:
+        - pnl_report_line
+        formatter:
+          Amount Actual: ${:,.0f}
+          Amount Budget: ${:,.0f}
+          difference: ${:,.0f}  
+          percentage_difference: "{:.2%}"
+        annotations: null
+        custom_options: {}
+        row_color_condition: "pnl_report_line"  # Column name to check
+        row_colors:
+          "Gross Margin": "rgba(144, 238, 144, 0.4)"
+          "EBITDA": "rgba(211, 211, 211, 0.4)"
+          "EBIT": "rgba(211, 211, 211, 0.4)"
+          "EBT": "rgba(211, 211, 211, 0.4)"
+          "Net Income": "rgba(255, 255, 224, 0.4)"
+        drop_null_dimensions: false
+  Profit and Loss Budget vs Actual by Account Category and Account Name:
+    dimensions:
+    - pnl_category
+    - pnl_account_name
+    metrics:
+    - Amount Actual
+    - Amount Budget
+    - _helper_account_order
+    derived_metrics:
+    - difference
+    - percentage_difference
+    sort:
+    - column: _helper_account_order
+      direction: asc
+    plots:
+      Overview:
+        plot_type: table
+        metrics:
+        - Amount Actual
+        - Amount Budget
+        - difference
+        - percentage_difference
+        formatter:
+          Amount Actual: ${:,.0f}
+          Amount Budget: ${:,.0f}
+          difference: ${:,.0f}  
+          percentage_difference: "{:.2%}"
+        annotations: null
+        custom_options: {}
+    drop_null_dimensions: false
+  Budget vs Actual by Month:
+    dimensions:
+    - month_year
+    metrics:
+    - Amount Actual
+    - Amount Budget
+    derived_metrics:
+    - difference
+    sort: []
+    plots:
+      bar plot:
+        plot_type: line
+    drop_null_dimensions: true
+  Budget vs Actual Overview by division:
+    dimensions:
+    - division
+    metrics:
+    - Amount Actual
+    - Amount Budget
+    plots:
+      Budget Overview:
+        plot_type: bar
+    drop_null_metric_results: true
+    drop_null_dimensions: true
+  # Core Actual Metrics Overview
+
+  # kpis
+  Revenue:
+    metrics:
+    - Revenue Actual
+    plots:
+      kpi:
+        plot_type: kpi
+        formatter:
+          Revenue Actual: ${:,.0f}
+  Net Income:
+    metrics:
+    - Net Income Actual
+    plots:
+      kpi:
+        plot_type: kpi
+        formatter:
+          Net Income Actual: ${:,.0f}
+  EBITDA Margin %:
+    derived_metrics:
+    - EBITDA Margin %
+    plots:
+      kpi:
+        plot_type: kpi
+        formatter:
+          EBITDA Margin %: "{:.2%}"
+  Gross Margin %:
+    #dimensions:
+    #- month_year
+    derived_metrics:
+    - Gross Margin %
+    plots:
+      kpi:
+        plot_type: kpi
+        formatter:
+          Gross Margin %: "{:.2%}"
+  Net Income Margin %:
+    derived_metrics:
+    - Net Income Margin %
+    plots:
+      kpi:
+        plot_type: kpi
+        formatter:
+          Net Income Margin %: "{:.2%}"
+  
+  # trends
+  Core Metrics Over Time:
+    dimensions:
+    - month_year
+    metrics: 
+    - Revenue Actual
+    - Net Income Actual
+    sort: []
+    plots:
+      line:
+        plot_type: line
+        formatter:
+          Revenue Actual: "{:.1f}"
+          Net Income Actual: "{:.1f}"
+        legend_position: "bottom"
+  Core % Metrics Over Time:
+    dimensions:
+    - month_year
+    - segment
+    metrics: []
+    derived_metrics:
+    - Gross Margin %
+    plots:
+      line:
+        plot_type: line
+        legend_position: "bottom"
+        formatter:
+          Gross Margin %: "{:.2f}%"
+  # Split by Dimensions
+  Gross Margin by Quarter by Business Unit:
+    dimensions:
+    - year_quarter
+    - business_unit
+    metrics: []
+    derived_metrics:
+    - Gross Margin %
+    plots:
+      line plot:
+        plot_type: line
+        stack: false
+  EBITDA Actual by Quarter by Business Unit:
+    dimensions:
+    - year_quarter
+    - business_unit
+    metrics:
+    - EBITDA Actual
+    plots:
+      line plot:
+        plot_type: bar
+        stacked: true
+  Variation in Amount by Year Quarter:
+    dimensions:
+    - year_quarter
+    metrics:
+    - Amount Actual
+    transformers:
+      variation:
+        time_dim: year_quarter
+        value_col: Amount Actual
+    drop_null_dimensions: true
+    plots:
+      line plot:
+        plot_type: combo
+        dimensions:
+        - year_quarter
+        metrics:
+        - Amount Actual
+        - Variation Amount Actual %        
+        formatter:
+          Variation Amount Actual: "{:.2f}%"
+  Actual by Account Category:
+    dimensions: 
+    - pnl_category  
+    - pnl_account_name
+    metrics:
+    - Amount Actual
+    sort:
+    - column: Amount Actual
+      direction: desc
+    plots:
+      bar plot:
+        plot_type: bar
+        stacked: true
+        orientation: horizontal
+        formatter:
+          Amount Actual: ${:,.0f}
+    drop_null_dimensions: true
+  Actual by Country:
+    dimensions:
+    - country    
+    - division
+    metrics:
+    - Amount Actual
+    sort:
+    - column: Amount Actual
+      direction: desc
+    plots:
+      bar plot:
+        plot_type: bar
+        stacked: false
+        orientation: horizontal
+        formatter:
+          Amount Actual: ${:,.0f}
+    drop_null_dimensions: true
+  #table
+  P&L by month:
+    dimensions:
+    - pnl_report_line
+    - month_year
+    - line_order
+    metrics:
+    - Amount Actual
+    derived_metrics: []
+    sort:
+    - column: line_order
+      direction: asc
+    plots:
+      pivot plot:
+        plot_type: pivot
+        dimensions:
+        - pnl_report_line
+        - month_year
+        metrics:
+        - Amount Actual
+        pivot:
+        - month_year
+        sort_by: line_order
+        sort_values: true
+        formatter:
+          Amount Actual: ${:,.0f}
+  P&L by Year Quarter:
+    dimensions:
+    - pnl_report_line
+    - year_quarter
+    - line_order
+    metrics:
+    - Amount Actual
+    derived_metrics: []
+    sort:
+    - column: line_order
+      direction: asc
+    plots:
+      pivot plot:
+        plot_type: pivot
+        dimensions:
+        - pnl_report_line
+        - month_year
+        metrics:
+        - Amount Actual
+        pivot:
+        - year_quarter
+        sort_by: line_order
+        sort_values: true
+        formatter:
+          Amount Actual: ${:,.0f}
+        row_color_condition: "pnl_report_line"  # Column name to check
+        row_colors:
+          "Gross Margin": "rgba(144, 238, 144, 0.4)"
+          "EBITDA": "rgba(211, 211, 211, 0.4)"
+          "EBIT": "rgba(211, 211, 211, 0.4)"
+          "EBT": "rgba(211, 211, 211, 0.4)"
+          "Net Income": "rgba(255, 255, 224, 0.4)"
+    drop_null_dimensions: false
+    drop_null_metric_results: false

@@ -1,0 +1,294 @@
+metrics:
+  Revenue:
+    expression: '[Unit Price] * [Quantity]'
+    aggregation: sum
+    context_state_name: Default
+    ignore_dimensions: false
+    ignore_context_filters: false
+  Total Revenue:
+    expression: '[Unit Price] * [Quantity]'
+    aggregation: sum
+    context_state_name: Default
+    ignore_dimensions: true
+    ignore_context_filters: false
+  Cost:
+    expression: '[Cost]'
+    aggregation: sum
+    context_state_name: Default
+    ignore_dimensions: false
+    ignore_context_filters: false
+  avg Unit Price:
+    expression: '[Unit Price]'
+    aggregation: mean
+    context_state_name: Default
+    ignore_dimensions: false
+    ignore_context_filters: false
+  number of Orders:
+    expression: '[SalesOrderNumber]'
+    aggregation: count_distinct
+    context_state_name: Default
+    ignore_dimensions: false
+    ignore_context_filters: false
+  Avg Revenue by Product-Region Group:
+    expression: '[Unit Price]*[Quantity]'
+    aggregation: mean
+    context_state_name: Default
+    ignore_dimensions: false
+    ignore_context_filters: false
+    nested:
+      dimensions:
+      - Product
+      - Region
+      aggregation: sum
+      compose: null
+derived_metrics:
+  Margin:
+    expression: '[Revenue] - [Cost]'
+    fillna: 0
+  Margin %:
+    expression: 100 * ([Revenue] - [Cost]) / [Revenue]
+  Revenue over Total:
+    expression: '[Revenue] / [Total Revenue]'
+  Revenue Rank:
+    expression: '@pd.Series([Revenue]).rank(ascending=True, method="dense")'
+queries:
+  Sales by Country and Category:
+    dimensions:
+    - Country
+    - Category
+    metrics:
+    - Revenue
+    derived_metrics:
+    - Margin %
+    - Revenue over Total
+    - Revenue Rank
+    sort:
+    - column: Revenue
+      direction: asc
+    - column: Margin
+      direction: desc
+    plots:
+      bar plot:
+        plot_type: bar
+        dimensions:
+        - Country
+        - Category
+        metrics:
+        - Revenue
+        color_by: null
+        title: Sales by Country and Category
+        stacked: true
+        figsize: null
+        orientation: vertical
+        palette: null
+        sort_values: false
+        sort_ascending: true
+        sort_by: null
+        pivot: null
+        limit: null
+        formatter: null
+        legend_position: null
+        annotations: null
+        custom_options: {}
+        hide_index: false
+        row_color_condition: null
+        row_colors: null
+    drop_null_dimensions: true
+    drop_null_metric_results: false
+  avg Unit Price by Category & Business Type:
+    dimensions:
+    - Category
+    - Business Type
+    metrics:
+    - avg Unit Price
+    derived_metrics: &id004 []
+    sort: []
+    drop_null_dimensions: false
+    drop_null_metric_results: false
+  High-Margin Products (>35%):
+    dimensions: &id001
+    - Product
+    metrics:
+    - number of Orders
+    derived_metrics:
+    - Margin
+    having: '[Margin %] >= 35'
+    sort:
+    - column: Margin
+      direction: desc
+    plots:
+      Default combo < system generated >:
+        plot_type: combo
+        dimensions: *id001
+        metrics:
+        - number of Orders
+        - Margin
+        color_by: null
+        title: High-Margin Products (>35%)
+        stacked: false
+        figsize: null
+        orientation: vertical
+        palette: null
+        sort_values: false
+        sort_ascending: true
+        sort_by: null
+        pivot: null
+        limit: null
+        formatter: null
+        legend_position: null
+        annotations: null
+        custom_options: {}
+        hide_index: false
+        row_color_condition: null
+        row_colors: null
+    drop_null_dimensions: true
+    drop_null_metric_results: false
+  Revenue vs Margin by Category:
+    dimensions: &id002
+    - Category
+    metrics:
+    - Revenue
+    derived_metrics:
+    - Margin
+    sort:
+    - column: Margin
+      direction: asc
+    plots:
+      combo plot:
+        plot_type: combo
+        dimensions: *id002
+        metrics:
+        - Revenue
+        - Margin
+        color_by: null
+        title: Revenue vs Margin by Category
+        stacked: false
+        figsize: null
+        orientation: vertical
+        palette: null
+        sort_values: false
+        sort_ascending: true
+        sort_by: null
+        pivot: null
+        limit: null
+        formatter: null
+        legend_position: null
+        annotations: null
+        custom_options: {}
+        hide_index: false
+        row_color_condition: null
+        row_colors: null
+    drop_null_dimensions: true
+    drop_null_metric_results: false
+  '**ad-hoc** (7d9bbba5)':
+    dimensions: &id003
+    - Region
+    - Category
+    metrics:
+    - Avg Revenue by Product-Region Group
+    derived_metrics: []
+    sort:
+    - column: Region
+      direction: asc
+    - column: Category
+      direction: asc
+    plots:
+      Default bar < system generated >:
+        plot_type: bar
+        dimensions: *id003
+        metrics:
+        - Avg Revenue by Product-Region Group
+        color_by: null
+        title: '**ad-hoc** (7d9bbba5)'
+        stacked: false
+        figsize: null
+        orientation: vertical
+        palette: null
+        sort_values: false
+        sort_ascending: true
+        sort_by: null
+        pivot: null
+        limit: null
+        formatter: null
+        legend_position: null
+        annotations: null
+        custom_options: {}
+        hide_index: false
+        row_color_condition: null
+        row_colors: null
+    drop_null_dimensions: false
+    drop_null_metric_results: false
+  '**ad-hoc** (a7a0e0d0)':
+    dimensions: []
+    metrics:
+    - Avg Revenue by Product-Region Group
+    derived_metrics: []
+    sort: []
+    plots:
+      Default kpi < system generated >:
+        plot_type: kpi
+        dimensions: []
+        metrics:
+        - Avg Revenue by Product-Region Group
+        color_by: null
+        title: '**ad-hoc** (a7a0e0d0)'
+        stacked: false
+        figsize: null
+        orientation: vertical
+        palette: null
+        sort_values: false
+        sort_ascending: true
+        sort_by: null
+        pivot: null
+        limit: null
+        formatter: null
+        legend_position: null
+        annotations: null
+        custom_options: {}
+        hide_index: false
+        row_color_condition: null
+        row_colors: null
+    drop_null_dimensions: false
+    drop_null_metric_results: false
+  Revenue by Month Year:
+    dimensions:
+    - Month-Year
+    metrics:
+    - Revenue
+    derived_metrics: *id004
+    transformers:
+      moving_average:
+        'on': Revenue
+        window: 8
+        sort_by:
+        - Month-Year
+        new_column: Revenue_ma
+    sort: []
+    plots:
+      line plot:
+        plot_type: line
+        dimensions:
+        - Month-Year
+        metrics:
+        - Revenue
+        - Revenue_ma
+        color_by: null
+        title: Revenue by Month Year
+        stacked: false
+        figsize: null
+        orientation: vertical
+        palette: null
+        sort_values: false
+        sort_ascending: true
+        sort_by: null
+        pivot: null
+        limit: null
+        formatter: null
+        legend_position: null
+        annotations: null
+        custom_options: {}
+        hide_index: false
+        row_color_condition: null
+        row_colors: null
+    drop_null_dimensions: true
+    drop_null_metric_results: false

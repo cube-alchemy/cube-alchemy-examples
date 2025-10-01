@@ -1,0 +1,4 @@
+cube-alchemy
+jupyterlab
+streamlit
+faker
