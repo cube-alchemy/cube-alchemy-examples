@@ -1,49 +1,49 @@
-pnl_account_name,pnl_category,account_number
-Gross Revenue,Revenue,1001
-Gross Revenue,Revenue,1002
-Gross Revenue,Revenue,1003
-Sales Returns,Revenue,1101
-Sales Returns,Revenue,1102
-Gross Revenue,Revenue,1201
-Gross Revenue,Revenue,1202
-Gross Revenue,Revenue,1203
-Direct Materials,COGS,2001
-Direct Materials,COGS,2002
-Direct Materials,COGS,2003
-Direct Labor,COGS,2101
-Direct Labor,COGS,2102
-Direct Labor,COGS,2103
-Direct Labor,COGS,2104
-Manufacturing Overhead,COGS,2201
-Manufacturing Overhead,COGS,2202
-Marketing,Operating Expenses,3001
-Marketing,Operating Expenses,3002
-Marketing,Operating Expenses,3003
-Salaries,Operating Expenses,3101
-Salaries,Operating Expenses,3102
-Salaries,Operating Expenses,3103
-Sales Commissions,Operating Expenses,3201
-Sales Commissions,Operating Expenses,3202
-Travel & Entertainment,Operating Expenses,3301
-Travel & Entertainment,Operating Expenses,3302
-Travel & Entertainment,Operating Expenses,3303
-Rent,Operating Expenses,3401
-Rent,Operating Expenses,3402
-Utilities,Operating Expenses,3501
-Utilities,Operating Expenses,3502
-Office Supplies,Operating Expenses,3601
-Office Supplies,Operating Expenses,3602
-Office Supplies,Operating Expenses,3603
-R&D,Operating Expenses,3701
-R&D,Operating Expenses,3702
-Depreciation,Depreciation & Amortization,4001
-Depreciation,Depreciation & Amortization,4002
-Depreciation,Depreciation & Amortization,4003
-Amortization,Depreciation & Amortization,4101
-Amortization,Depreciation & Amortization,4102
-Interest,Interest,5001
-Interest,Interest,5002
-Interest,Interest,5003
-Taxes,Taxes,5101
-Taxes,Taxes,5102
-Taxes,Taxes,5103
+pnl_account_name,pnl_category,account_number,pnl_account_detail
+Gross Revenue,Revenue,1001,Online Product Sales
+Gross Revenue,Revenue,1002,Retail Product Sales
+Gross Revenue,Revenue,1003,Wholesale Product Sales
+Gross Revenue,Revenue,1201,Bulk Sales
+Gross Revenue,Revenue,1202,Service Fees - Recurring
+Gross Revenue,Revenue,1203,Licensing Income
+Sales Returns,Revenue,1301,E-commerce Sales
+Sales Returns,Revenue,1302,Direct Sales
+Direct Materials,COGS,2001,Raw Materials Cost
+Direct Materials,COGS,2002,Packaging Materials
+Direct Materials,COGS,2003,Component Costs
+Direct Labor,COGS,2101,Production Labor
+Direct Labor,COGS,2102,Assembly Labor
+Direct Labor,COGS,2103,Quality Control Labor
+Direct Labor,COGS,2104,Manufacturing Labor
+Manufacturing Overhead,COGS,2201,Factory Overhead
+Manufacturing Overhead,COGS,2202,Production Overhead
+Marketing,Operating Expenses,3001,Advertising Expenses
+Marketing,Operating Expenses,3002,Promotional Costs
+Marketing,Operating Expenses,3003,Marketing Campaigns
+Salaries,Operating Expenses,3101,Executive Salaries
+Salaries,Operating Expenses,3102,Staff Salaries
+Salaries,Operating Expenses,3103,Manager Salaries
+Sales Commissions,Operating Expenses,3201,Sales Team Commissions
+Sales Commissions,Operating Expenses,3202,Agent Commissions
+Travel & Entertainment,Operating Expenses,3301,Business Travel
+Travel & Entertainment,Operating Expenses,3302,Client Entertainment
+Travel & Entertainment,Operating Expenses,3303,Employee Travel
+Rent,Operating Expenses,3401,Office Rent
+Rent,Operating Expenses,3402,Warehouse Rent
+Utilities,Operating Expenses,3501,Electricity
+Utilities,Operating Expenses,3502,Water and Sewage
+Office Supplies,Operating Expenses,3601,Stationery
+Office Supplies,Operating Expenses,3602,Office Equipment
+Office Supplies,Operating Expenses,3603,IT Supplies
+R&D,Operating Expenses,3701,Research Expenses
+R&D,Operating Expenses,3702,Development Costs
+Depreciation,Depreciation & Amortization,4001,Equipment Depreciation
+Depreciation,Depreciation & Amortization,4002,Building Depreciation
+Depreciation,Depreciation & Amortization,4003,Vehicle Depreciation
+Amortization,Depreciation & Amortization,4101,Intangible Amortization
+Amortization,Depreciation & Amortization,4102,Patent Amortization
+Interest,Interest,5001,Loan Interest
+Interest,Interest,5002,Credit Interest
+Interest,Interest,5003,Investment Interest
+Taxes,Taxes,5101,Income Tax
+Taxes,Taxes,5102,Property Tax
+Taxes,Taxes,5103,Sales Tax

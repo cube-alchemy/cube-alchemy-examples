@@ -21,7 +21,7 @@ from pathlib import Path
 # ============================================================================
 
 # Financial Targets (calculated backwards from 19% net margin with 25% tax rate)
-TARGET_ANNUAL_REVENUE = 40_000_000  # $40M per year
+TARGET_ANNUAL_REVENUE = 80_000_000  # $80M per year
 TARGET_NET_MARGIN = 0.19           # 19% net margin
 # Working backwards: Net margin 19% with 25% tax rate means pre-tax margin of 25.3%
 # So total costs before tax should be 74.7% of revenue
@@ -53,7 +53,7 @@ MONTHLY_VARIANCE = 0.10            # ±10% monthly variance within actuals
 DAILY_VARIANCE = 0.05              # ±5% daily variance
 
 # Data generation parameters
-START_DATE = '2023-01-01'
+START_DATE = '2024-01-01'
 END_DATE = '2025-09-30'
 TRANSACTION_FREQUENCY = {
     'Revenue': 100,         # More frequent revenue transactions
@@ -181,6 +181,94 @@ def get_account_weights_by_category():
             'R&D': 0.2,            # Increased from 0.15
             'IT': 0.13,             # Reduced from 0.10
             'Salaries': 0.2        # Added explicit salaries component
+        }
+    }
+
+def get_account_detail_weights():
+    """Define how amounts should be distributed across account details within each pnl_account_name."""
+    return {
+        # Weights for account distribution within each pnl_account_name
+        'Gross Revenue': {
+            1001: 0.45,  # Online Product Sales (45% of Gross Revenue)
+            1002: 0.35,  # Retail Product Sales (35% of Gross Revenue)
+            1003: 0.10,  # Wholesale Product Sales (10% of Gross Revenue)
+            1201: 0.04,  # Bulk Sales (4% of Gross Revenue)
+            1202: 0.04,  # Service Fees - Recurring (4% of Gross Revenue)
+            1203: 0.02,  # Licensing Income (2% of Gross Revenue)
+        },
+        'Sales Returns': {
+            1301: 0.60,  # E-commerce Sales (60% of Sales Returns)
+            1302: 0.40,  # Direct Sales (40% of Sales Returns)
+        },
+        'Direct Materials': {
+            2001: 0.50,  # Raw Materials Cost (50% of Direct Materials)
+            2002: 0.30,  # Packaging Materials (30% of Direct Materials)
+            2003: 0.20,  # Component Costs (20% of Direct Materials)
+        },
+        'Direct Labor': {
+            2101: 0.40,  # Production Labor (40% of Direct Labor)
+            2102: 0.25,  # Assembly Labor (25% of Direct Labor)
+            2103: 0.15,  # Quality Control Labor (15% of Direct Labor)
+            2104: 0.20,  # Manufacturing Labor (20% of Direct Labor)
+        },
+        'Manufacturing Overhead': {
+            2201: 0.60,  # Factory Overhead (60% of Manufacturing Overhead)
+            2202: 0.40,  # Production Overhead (40% of Manufacturing Overhead)
+        },
+        'Marketing': {
+            3001: 0.40,  # Advertising Expenses (40% of Marketing)
+            3002: 0.30,  # Promotional Costs (30% of Marketing)
+            3003: 0.30,  # Marketing Campaigns (30% of Marketing)
+        },
+        'Salaries': {
+            3101: 0.30,  # Executive Salaries (30% of Salaries)
+            3102: 0.50,  # Staff Salaries (50% of Salaries)
+            3103: 0.20,  # Manager Salaries (20% of Salaries)
+        },
+        'Sales Commissions': {
+            3201: 0.70,  # Sales Team Commissions (70% of Sales Commissions)
+            3202: 0.30,  # Agent Commissions (30% of Sales Commissions)
+        },
+        'Travel & Entertainment': {
+            3301: 0.40,  # Business Travel (40% of Travel & Entertainment)
+            3302: 0.30,  # Client Entertainment (30% of Travel & Entertainment)
+            3303: 0.30,  # Employee Travel (30% of Travel & Entertainment)
+        },
+        'Rent': {
+            3401: 0.60,  # Office Rent (60% of Rent)
+            3402: 0.40,  # Warehouse Rent (40% of Rent)
+        },
+        'Utilities': {
+            3501: 0.80,  # Electricity (80% of Utilities)
+            3502: 0.20,  # Water and Sewage (20% of Utilities)
+        },
+        'Office Supplies': {
+            3601: 0.30,  # Stationery (30% of Office Supplies)
+            3602: 0.40,  # Office Equipment (40% of Office Supplies)
+            3603: 0.30,  # IT Supplies (30% of Office Supplies)
+        },
+        'R&D': {
+            3701: 0.55,  # Research Expenses (55% of R&D)
+            3702: 0.45,  # Development Costs (45% of R&D)
+        },
+        'Depreciation': {
+            4001: 0.50,  # Equipment Depreciation (50% of Depreciation)
+            4002: 0.30,  # Building Depreciation (30% of Depreciation)
+            4003: 0.20,  # Vehicle Depreciation (20% of Depreciation)
+        },
+        'Amortization': {
+            4101: 0.65,  # Intangible Amortization (65% of Amortization)
+            4102: 0.35,  # Patent Amortization (35% of Amortization)
+        },
+        'Interest': {
+            5001: 0.65,  # Loan Interest (65% of Interest)
+            5002: 0.25,  # Credit Interest (25% of Interest)
+            5003: 0.10,  # Investment Interest (10% of Interest)
+        },
+        'Taxes': {
+            5101: 0.75,  # Income Tax (75% of Taxes)
+            5102: 0.15,  # Property Tax (15% of Taxes)
+            5103: 0.10,  # Sales Tax (10% of Taxes)
         }
     }
 
@@ -429,8 +517,23 @@ def generate_actuals_data(dims, budget_df):
     actuals_data = []
     calendar = create_calendar_dim()
     
-    # Create account number mapping
-    account_mapping = dims['accounts'].set_index('pnl_account_name')['account_number'].to_dict()
+    # Get account detail weights for distribution
+    account_detail_weights = get_account_detail_weights()
+    
+    # Create mappings
+    # Map from pnl_account_name to all associated account_numbers
+    account_number_by_pnl_name = {}
+    for _, row in dims['accounts'].iterrows():
+        if row['pnl_account_name'] not in account_number_by_pnl_name:
+            account_number_by_pnl_name[row['pnl_account_name']] = []
+        account_number_by_pnl_name[row['pnl_account_name']].append(row['account_number'])
+    
+    # Map from account_number to pnl_account_detail
+    account_detail_mapping = dims['accounts'].set_index('account_number')['pnl_account_detail'].to_dict()
+    # Map from account_number to pnl_category
+    category_by_account = dims['accounts'].set_index('account_number')['pnl_category'].to_dict()
+    # Map from account_number to pnl_account_name
+    account_name_by_number = dims['accounts'].set_index('account_number')['pnl_account_name'].to_dict()
     
     for _, budget_row in budget_df.iterrows():
         month_year = budget_row['month_year']
@@ -442,9 +545,13 @@ def generate_actuals_data(dims, budget_df):
         # Apply budget vs actual variance
         monthly_actual = apply_variance(monthly_budget, BUDGET_VS_ACTUAL_VARIANCE)
         
-        # Get account number and category
-        account_number = account_mapping.get(pnl_account_name, 9999)
-        category = dims['accounts'][dims['accounts']['pnl_account_name'] == pnl_account_name]['pnl_category'].iloc[0]
+        # Get account numbers for this pnl_account_name
+        account_numbers = account_number_by_pnl_name.get(pnl_account_name, [])
+        if not account_numbers:
+            # If no account numbers found, use a default
+            account_numbers = [9999]
+            print(f"Warning: No account numbers found for {pnl_account_name}")
+            continue
         
         # Get days in this month
         month_days = calendar[
@@ -452,41 +559,63 @@ def generate_actuals_data(dims, budget_df):
             (calendar['month'] == month)
         ].copy()
         
+        # Get the category based on the first account number (they should all have the same category)
+        category = category_by_account.get(account_numbers[0], 'Unknown')
+        
         # Determine transaction frequency for this account category
         freq = TRANSACTION_FREQUENCY.get(category, 30)
         
-        # Generate transactions for this month
-        num_transactions = min(freq, len(month_days))
-        selected_days = random.sample(list(month_days['date']), num_transactions)
+        # Get weights for distributing amount across account details
+        if pnl_account_name in account_detail_weights:
+            weights = account_detail_weights[pnl_account_name]
+            # Filter weights to only include account numbers we have
+            weights = {num: weight for num, weight in weights.items() if num in account_numbers}
+            # Normalize weights to sum to 1
+            weight_sum = sum(weights.values())
+            if weight_sum > 0:
+                weights = {num: weight/weight_sum for num, weight in weights.items()}
+            else:
+                # Equal distribution if no weights or sum is 0
+                weights = {num: 1.0 / len(account_numbers) for num in account_numbers}
+        else:
+            # If no weights defined, distribute equally
+            weights = {num: 1.0 / len(account_numbers) for num in account_numbers}
         
-        # Distribute the monthly amount across transactions
-        for i, date in enumerate(selected_days):
-            # Base amount (equal distribution with some variance)
-            base_amount = monthly_actual / num_transactions
-            transaction_amount = apply_variance(base_amount, DAILY_VARIANCE)
-            # Note: transaction_amount already has correct sign from budget
+        # Distribute the monthly amount across account details according to weights
+        for account_number, weight in weights.items():
+            account_amount = monthly_actual * weight
             
-            # Select random dimensions
-            location_id = random.choice(dims['locations']['location_id'].tolist())
-            cost_center_id = random.choice(dims['cost_centers']['cost_center_id'].tolist())
-            vendor_id = random.choice(dims['vendors']['vendor_id'].tolist())
-            project_id = random.choice(dims['projects']['project_id'].tolist())
+            # Generate transactions for this account and month
+            num_transactions = max(1, min(freq // len(weights), len(month_days)))
+            selected_days = random.sample(list(month_days['date']), num_transactions)
             
-            # Generate segment (simple business categorization)
-            segments = ['B2B', 'B2C', 'Government', 'Enterprise']
-            segment = random.choice(segments)
-            
-            actuals_data.append({
-                'date': date,
-                'account_number': account_number,
-                'location_id': location_id,
-                'bu_id': bu_id,
-                'segment': segment,
-                'amount': round(transaction_amount, 2),
-                'cost_center_id': cost_center_id,
-                'vendor_id': vendor_id,
-                'project_id': project_id
-            })
+            # Distribute this account's amount across its transactions
+            for date in selected_days:
+                # Base amount (equal distribution with some variance)
+                base_amount = account_amount / num_transactions
+                transaction_amount = apply_variance(base_amount, DAILY_VARIANCE)
+                
+                # Select random dimensions
+                location_id = random.choice(dims['locations']['location_id'].tolist())
+                cost_center_id = random.choice(dims['cost_centers']['cost_center_id'].tolist())
+                vendor_id = random.choice(dims['vendors']['vendor_id'].tolist())
+                project_id = random.choice(dims['projects']['project_id'].tolist())
+                
+                # Generate segment (simple business categorization)
+                segments = ['B2B', 'B2C', 'Government', 'Enterprise']
+                segment = random.choice(segments)
+                
+                actuals_data.append({
+                    'date': date,
+                    'account_number': account_number,
+                    'location_id': location_id,
+                    'bu_id': bu_id,
+                    'segment': segment,
+                    'amount': round(transaction_amount, 2),
+                    'cost_center_id': cost_center_id,
+                    'vendor_id': vendor_id,
+                    'project_id': project_id
+                })
     
     return pd.DataFrame(actuals_data)
 
@@ -542,6 +671,28 @@ def main():
     # Revenue analysis
     revenue_budget = budget_df[budget_df['pnl_account_name'].str.contains('Revenue', na=False)]['amount'].sum()
     print(f"\nRevenue Budget: ${revenue_budget:,.0f}")
+    
+    # Account detail distribution analysis
+    print("\nAccount Detail Distribution Summary:")
+    account_detail_summary = actuals_df.groupby('account_number')['amount'].sum().reset_index()
+    account_detail_summary = account_detail_summary.merge(
+        dims['accounts'][['account_number', 'pnl_account_name', 'pnl_account_detail']],
+        on='account_number'
+    )
+    # Group by pnl_account_name to show distribution
+    account_name_totals = account_detail_summary.groupby('pnl_account_name')['amount'].sum().to_dict()
+    
+    # Sample of the distribution (show a few examples)
+    print("\nSample Account Detail Distribution:")
+    sample_accounts = ['Gross Revenue', 'Direct Materials', 'Salaries']
+    for account_name in sample_accounts:
+        print(f"\n{account_name} Distribution:")
+        account_details = account_detail_summary[account_detail_summary['pnl_account_name'] == account_name]
+        if not account_details.empty:
+            total = account_name_totals.get(account_name, 1)  # Avoid division by zero
+            for _, row in account_details.iterrows():
+                pct = (row['amount'] / total * 100) if total != 0 else 0
+                print(f"  - {row['pnl_account_detail']} (#{row['account_number']}): ${row['amount']:,.0f} ({pct:.1f}%)")
     
     print(f"\nFiles created in '{output_dir}' directory:")
     print("- calendar_dim.csv")

@@ -18,11 +18,11 @@ st.caption("Interactive financial analytics powered by CubeAlchemy")
 st.markdown("""
 ## Welcome to Your Financial Command Center
 
-This dashboard provides comprehensive insights into your company's financial performance through detailed 
-Profit & Loss (P&L) analysis. Track revenue streams, monitor expenses, and analyze profitability metrics 
-across different business dimensions - all in one place.
+This dashboard provides comprehensive insights into your company's financial performance through basic 
+Profit & Loss (P&L) analysis. Track revenue, monitor expenses, and analyze profitability metrics 
+across different business dimensions.
 
-Use the **navigation menu** on the left to explore different financial perspectives, and apply **filters** to focus on specific business units, time periods, regions, and more.
+Use the **navigation menu** on the left to explore different perspectives, and apply **filters** to focus on specific business units, time periods, regions, and more.
 """)
 
 # Display the data model visualization
@@ -64,7 +64,7 @@ with metrics_tab1:
     | **Revenue Actual** | Actual income generated from business activities | Primary indicator of top-line growth |
     | **EBITDA Actual** | Earnings Before Interest, Taxes, Depreciation & Amortization | Indicates operational profitability |
                 
-    Note: Amount Actual represents the summation of all income and expenses, if no pnl_category (account category) filter is applied then it will be same as the Net Income. You can use the filter to look at the figures for specific categories like Revenue, Expenses, etc.
+    **Note**: Amount Actual represents the summation of all income and expenses given the current filter selection, if no account (pnl_report_line, pnl_category or pnl_account_detail) filter is applied then it will be same as the Net Income. You can use these filters to look at the figures for specific categories like Revenue, Expenses, etc.
     """)
 
 with metrics_tab2:
@@ -129,19 +129,31 @@ with col1:
     This page answers: "How is our overall financial health trending?"
     """)
     
-    st.subheader("2. Profit & Loss and Trends")
+    st.subheader("2. Profit & Loss Analysis")
     st.markdown("""
-    The **P&L Trends** page provides detailed breakdown of your income statement:
-    
-    - **P&L by Quarter**: Full profit & loss statement organized by accounting period
-    - **EBITDA by Business Unit**: Operational profitability across different divisions
-    - **Analysis by Category & Region**: Financial performance across different dimensions
-    
-    This page answers: "Where are our financial strengths and weaknesses?"
+    The **Profit & Loss Analysis** page offers a comprehensive view of key financial figures:
+
+    - **KPIs**: Gross Margin %, EBITDA Margin %, Net Income Margin %
+    - **Quarterly Trends**: EBITDA Actual by Quarter by Business Unit
+    - **Category & Country Breakdowns**: Actual by Account Category and Actual by Country
+    - **Margin Insights**: Gross Margin by Quarter by Business Unit
+
+    This page answers: "How are our core financial metrics evolving across different categories and regions?"
     """)
 
 with col2:
-    st.subheader("3. Actual vs Budget")
+    st.subheader("3. Profit & Loss by Account")
+    st.markdown("""
+    The **Profit & Loss by Account** page dives into the income statement at the account level:
+
+    - **KPIs**: Gross Margin %, EBITDA Margin %, Net Income Margin %
+    - **Account-Level Trends**: P&L by Year Quarter
+    - **Detailed Drilldowns**: Amount by Account detail and P&L by account detail
+
+    This page answers: "Which accounts are driving our financial results and trends over time?"
+    """)
+    
+    st.subheader("4. Actual vs Budget")
     st.markdown("""
     The **Actual vs Budget** page focuses on variance analysis:
     

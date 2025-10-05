@@ -197,7 +197,7 @@ queries:
     metrics: 
     - Revenue Actual
     - Net Income Actual
-    sort: []
+    drop_null_dimensions: true
     plots:
       line:
         plot_type: line
@@ -294,7 +294,52 @@ queries:
         formatter:
           Amount Actual: ${:,.0f}
     drop_null_dimensions: true
+  Amount by Account detail:
+    dimensions:
+    - pnl_account_detail
+    - pnl_account_name
+    metrics:
+    - Amount Actual
+    sort:
+    - column: Amount Actual
+      direction: desc
+    drop_null_dimensions: true
+    plots:
+      bar plot:
+        plot_type: bar
+        stacked: true
+        orientation: horizontal
+        formatter:
+          Amount Actual: ${:,.0f}
+
   #table
+  P&L by account detail:
+    dimensions:
+    - pnl_category
+    - pnl_account_name
+    - pnl_account_detail
+    - account_number
+    - year_quarter
+    metrics:
+    - Amount Actual
+    sort:
+    - column: account_number
+      direction: asc
+    drop_null_dimensions: true
+    plots:
+      Overview:
+        plot_type: pivot
+        dimensions:
+        - pnl_category
+        - pnl_account_name
+        - pnl_account_detail
+        - account_number
+        - year_quarter
+        sort_by: account_number
+        pivot:
+        - year_quarter
+        metrics:
+        - Amount Actual
   P&L by month:
     dimensions:
     - pnl_report_line
@@ -336,7 +381,7 @@ queries:
         plot_type: pivot
         dimensions:
         - pnl_report_line
-        - month_year
+        - year_quarter
         metrics:
         - Amount Actual
         pivot:
