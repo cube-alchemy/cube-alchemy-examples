@@ -180,7 +180,7 @@ queries:
         row_colors: null
     drop_null_dimensions: true
     drop_null_metric_results: false
-  '**ad-hoc** (7d9bbba5)':
+  '**ad-hoc** (ab577b1e)':
     dimensions: &id003
     - Region
     - Category
@@ -199,7 +199,7 @@ queries:
         metrics:
         - Avg Revenue by Product-Region Group
         color_by: null
-        title: '**ad-hoc** (7d9bbba5)'
+        title: '**ad-hoc** (ab577b1e)'
         stacked: false
         figsize: null
         orientation: vertical
@@ -218,7 +218,7 @@ queries:
         row_colors: null
     drop_null_dimensions: false
     drop_null_metric_results: false
-  '**ad-hoc** (a7a0e0d0)':
+  '**ad-hoc** (629be861)':
     dimensions: []
     metrics:
     - Avg Revenue by Product-Region Group
@@ -231,7 +231,7 @@ queries:
         metrics:
         - Avg Revenue by Product-Region Group
         color_by: null
-        title: '**ad-hoc** (a7a0e0d0)'
+        title: '**ad-hoc** (629be861)'
         stacked: false
         figsize: null
         orientation: vertical

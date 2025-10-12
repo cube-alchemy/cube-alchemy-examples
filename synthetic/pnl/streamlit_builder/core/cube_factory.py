@@ -27,8 +27,6 @@ def get_cube() -> Hypercube:
         
         cube.set_plot_renderer(StreamlitRenderer())
 
-        cube.set_context_state('Default')
-
         def variation(df, time_dim, value_col, **kwargs):
             # Calculate the percentage change compared to the previous period
             df = df.sort_values(by=time_dim)
