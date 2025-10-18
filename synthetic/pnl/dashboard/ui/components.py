@@ -76,6 +76,6 @@ def plot(name: str, height: int = 400, use_container_width: bool = True, **kwarg
     """Wrapper to plot with error handling."""
     cube = get_cube()
     try:
-        cube.plot(name, height=height, use_container_width=use_container_width, **kwargs)
+        cube.plot(name, height=height, **kwargs)
     except Exception as e:
         st.error(f"Error plotting {name}: {e}")

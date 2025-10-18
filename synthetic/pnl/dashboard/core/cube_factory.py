@@ -23,7 +23,7 @@ def get_cube() -> Hypercube:
         print("type of pickle_path:", type(pickle_path))
         st.session_state['cube'] = Hypercube.load_pickle(pickle_path, relative_path=False)
         cube = st.session_state['cube']
-        cube.set_logger(True)  # enable basic INFO config
+        #cube.set_logger(True)  # enable basic INFO config
 
         set_yaml(cube)
         

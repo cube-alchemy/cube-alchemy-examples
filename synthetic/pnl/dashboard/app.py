@@ -13,7 +13,7 @@ st.set_page_config(
 cube = get_cube()
 
 st.title("Financial Performance Dashboard")
-st.caption("Interactive financial analytics powered by CubeAlchemy")
+st.caption("Interactive financial analytics powered by [CubeAlchemy](https://www.cube-alchemy.com)")
 
 st.markdown("""
 ## Welcome to Your Financial Command Center

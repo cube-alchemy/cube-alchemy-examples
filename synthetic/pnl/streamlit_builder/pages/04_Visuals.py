@@ -25,7 +25,7 @@ t = t_start
 for i, q in enumerate(queries):    
     with cols[i % n]:
         try:
-            cube.plot(q, height=tile_height, use_container_width=True, show_title=False)
+            cube.plot(q, height=tile_height, show_title=False)
             # Log time taken for each plot
             t1 = time.time()
             print(f"Time taken for plot '{q}': {t1 - t:.3f} seconds")
